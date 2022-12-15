@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- <link rel="shortcut icon" href="img/logo.png" type="image/png"> -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- My Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+    <!-- AOS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- ICON -->
+    <script src="https://kit.fontawesome.com/2eb34c602e.js" crossorigin="anonymous"></script>
+    <style>
+        .navbar {
+            margin-top: 35px;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            font-family: Poppins;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #042944 !important;
+
+        }
+
+        .nav-link {
+            color: #042944;
+            font-weight: 500;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .button {
+            background: #25316D;
+            border-radius: 30px;
+            border-color: #25316D;
+            color: #F1F1F1;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .navbar-toggler {
+            border: none;
+        }
+
+        .fas {
+            color: #98CCCE;
+        }
+
+        body {
+            background-color: #F1F1F1;
+        }
+
+        footer {
+            margin-top: 50px;
+            background-color: #25316D;
+        }
+
+        .copyright {
+            margin-top: 20px;
+            color: #ffffff;
+            font-family: Poppins;
+            font-size: 14px;
+        }
+
+        .nav-link {
+            margin-right: 40px;
+        }
+
+        .nav-link:hover::after {
+            content: '';
+            display: block;
+            border-bottom: 3px solid #EF7746;
+            width: 100%;
+            margin: auto;
+            padding: 2px;
+            margin-bottom: -8px;
+        }
+
+        .card {
+            border-radius: 30px;
+            border: none;
+            margin-top: 20px;
+
+        }
+
+        .btn-primary {
+            border: none;
+            background-color: #25316D;
+            color: #ffffff;
+            font-family: Poppins;
+            font-size: 14px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .h2 {
+            font-family: Poppins;
+            font-weight: bold;
+            color: #042944;
+            text-align: center;
+        }
+
+        .breadcrumb-item {
+            font-family: Poppins;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <?php
+
+    session_start();
+    if (isset($_SESSION['status']) != "login") {
+        header("location:/project2/admin");
+    }
+    if (isset($_POST['submit'])) {
+        session_destroy();
+        header("location:/project2/admin");
+    }
+    // memanggil file conn.php untuk membuat koneksi
+    include 'connection.php';
+
+    // mengecek apakah di url ada nilai GET id
+    if (isset($_GET['id'])) {
+        // ambil nilai id dari url dan disimpan dalam variabel $id
+        $id = ($_GET["id"]);
+
+        // menampilkan data dari database yang mempunyai id=$id
+        $query = "SELECT * FROM news WHERE id='$id'";
+        $result = mysqli_query($conn, $query);
+        // jika data gagal diambil maka akan tampil error berikut
+        if (!$result) {
+            die("Query Error: " . mysqli_errno($conn) .
+                " - " . mysqli_error($conn));
+        }
+        // mengambil data dari database
+        $data = mysqli_fetch_assoc($result);
+        // apabila data tidak ada pada database maka akan dijalankan perintah ini
+        if (!count($data)) {
+            echo "<script>alert('Data tidak ditemukan pada database');window.location='index.php';</script>";
+        }
+    } else {
+        // apabila tidak ada data GET id pada akan di redirect ke index.php
+        echo "<script>alert('Masukkan data id.');window.location='index.php';</script>";
+    }
+    ?>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Menit.com</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars bar"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-item nav-link active" href="/project2/admin/dashboard.php">Beranda</a>
+                    <a class="nav-item nav-link" href="/project2/admin/kategori">Kategori</a>
+                    <a class="nav-item nav-link" href="/project2/admin/berita">Berita</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+    <!-- AKHIR NAVBAR -->
+
+
+    <div class="container">
+        <div class="row justify-content-center ">
+            <main class="col-md-9 ms-sm-auto col-lg-12 px-md-4 py-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Berita</li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Berita</li>
+                    </ol>
+                </nav>
+                <h1 class="h2">Update Berita</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="proses_edit.php" enctype="multipart/form-data">
+                            <input name="id" value="<?php echo $data['id']; ?>" hidden />
+                            <div class="mb-3">
+                                <label for="category_id" class="form-label">Kategori ID</label>
+                                <input type="text" class="form-control" id="category_id" name="category_id" placeholder="Kategori ID" required value="<?php echo $data['category_id']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Judul</label>
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Judul" required value="<?php echo $data['title']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Isi</label>
+                                <input type="text" class="form-control" id="content" name="content" placeholder="Isi" required value="<?php echo $data['content']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Tanggal</label>
+                                <input type="text" class="form-control" id="date" name="date" placeholder="0000-00-00" required value="<?php echo $data['date']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="time" class="form-label">Waktu</label>
+                                <input type="text" class="form-control" id="time" name="time" placeholder="00:00:00" required value="<?php echo $data['time']; ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label" style="float:left;">Gambar</label>
+                                <img src="gambar/<?php echo $data['image']; ?>" style="width: 120px;margin-right:900px;">
+                                <input type="file" name="image" style="float:left; margin-top :10px;">
+                            </div>
+                            <p style="color: red; font-size:12px;"><?php if (isset($_SESSION['error'])) {
+                                                                        echo ($_SESSION['error']);
+                                                                    } ?></p>
+                            <button type="submit" name="submit" class="btn btn-primary button-blue my-3" style="color: white; margin-top:300px;margin-right: 700px;">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer">
+            <div class="row">
+                <div class="copyright">
+                    <p>copyright Menit.com © 2022 all rights reserved</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </footer>
+    <!-- AKHIR FOOTER -->
+</body>
